@@ -3,6 +3,8 @@ import { Platform, TouchableOpacity, ScrollView, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { ProductNavigationProps } from "../../@types/navigation";
 
 import { ButtonBack } from "../../components/ButtonBack";
 import { Photo } from "../../components/Photo";
@@ -32,6 +34,9 @@ export function Product() {
   const [priceSizeM, setPriceSizeM] = useState("");
   const [priceSizeG, setPriceSizeG] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const route = useRoute();
+  const { id } = route.params as ProductNavigationProps;
 
   async function handlePickerImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
