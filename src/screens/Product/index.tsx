@@ -89,9 +89,7 @@ export function Product() {
         photo_path: reference.fullPath,
       })
       .then(() => Alert.alert("Cadastro", "Pizza cadastrada com sucesso"))
-      .catch(() =>
-        Alert.alert("Cadastro", "Não foi possível cadastrar a pizza")
-      );
+      .catch(() => Alert.alert("Cadastro", "Não foi possível cadastrar"));
 
     setIsLoading(false);
   }
@@ -108,7 +106,7 @@ export function Product() {
         <Upload>
           <Photo uri={image} />
           <PickImageButton
-            title="carregar"
+            title="Carregar"
             type="secondary"
             onPress={handlePickerImage}
           />
@@ -151,7 +149,7 @@ export function Product() {
           </InputGroup>
 
           <Button
-            title="cadastrar pizza"
+            title="Cadastrar pizza"
             isLoading={isLoading}
             onPress={handleAdd}
           />
