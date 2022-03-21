@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Alert, TouchableOpacity, FlatList } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "styled-components/native";
 import firestore from "@react-native-firebase/firestore";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import happyEmoji from "../../assets/happy.png";
 
@@ -19,6 +19,7 @@ import {
   MenuHeader,
   MenuItemsNumber,
   Title,
+  NewProductButton,
 } from "./styles";
 
 export function Home() {
@@ -64,9 +65,15 @@ export function Home() {
     navigation.navigate("product", { id });
   }
 
-  useEffect(() => {
-    fetchPizzas("");
-  }, []);
+  function handleAdd() {
+    navigation.navigate("product", {});
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPizzas("");
+    }, [])
+  );
 
   return (
     <Container>
@@ -88,7 +95,7 @@ export function Home() {
       />
       <MenuHeader>
         <Title>Cardápio</Title>
-        <MenuItemsNumber>10 Pizzas</MenuItemsNumber>
+        <MenuItemsNumber>{pizzas.length} Pizzas</MenuItemsNumber>
       </MenuHeader>
 
       <FlatList
@@ -103,6 +110,11 @@ export function Home() {
           paddingBottom: 125,
           marginHorizontal: 24,
         }}
+      />
+      <NewProductButton
+        title="Cadastrar Pizza"
+        type="secondary"
+        onPress={handleAdd}
       />
     </Container>
   );
