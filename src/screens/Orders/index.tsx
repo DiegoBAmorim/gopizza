@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList } from "react-native";
 import { OrderCard } from "../../components/OrderCard";
+import { ItemSeparator } from "../../components/ItemSeparator";
 
 import { Container, Header, Title } from "./styles";
 
@@ -17,7 +18,8 @@ export function Orders() {
         renderItem={({ item, index }) => <OrderCard index={index} />}
         numColumns={2}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 125 }}
+        contentContainerStyle={{ paddingBottom: 125, paddingHorizontal: 24 }}
+        ItemSeparatorComponent={() => <ItemSeparator />}
       />
     </Container>
   );

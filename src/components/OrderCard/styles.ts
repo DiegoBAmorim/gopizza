@@ -24,8 +24,8 @@ ${({theme, index}) => css`
 `;
 
 export const Image = styled.Image`
-width: 140px;
-height: 140px;
+width: 104px;
+height: 104px;
 border-radius: 52px;
 `;
 

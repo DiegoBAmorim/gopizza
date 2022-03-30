@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Alert, Platform } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import firestore from "@react-native-firebase/firestore";
 
 import { PIZZA_TYPES } from "../../utils/pizzaTypes";
 
@@ -7,6 +9,7 @@ import { ButtonBack } from "../../components/ButtonBack";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { RadioButton } from "../../components/RadioButton";
+import { OrderNavigationProps } from "../../@types/navigation";
 
 import {
   Container,
@@ -21,19 +24,51 @@ import {
   FormRow,
   Price,
 } from "./styles";
+import { ProductProps } from "@src/components/ProductCard";
+
+type PizzaResponse = ProductProps & {
+  prices_sizes: {
+    [key: string]: number;
+  };
+};
 
 export function Order() {
   const [size, setSize] = useState("");
+  const [pizza, setPizza] = useState<PizzaResponse>({} as PizzaResponse);
+  const [quantity, setQuantity] = useState(0);
+  const [tableNumber, setTableNumber] = useState("");
+
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { id } = route.params as OrderNavigationProps;
+  const amount = size ? pizza.prices_sizes[size] * quantity : "0,00";
+
+  useEffect(() => {
+    if (id) {
+      firestore()
+        .collection("pizzas")
+        .doc(id)
+        .get()
+        .then((response) => setPizza(response.data() as PizzaResponse))
+        .catch(() =>
+          Alert.alert("Pedido", "Não foi possível carregar o produto")
+        );
+    }
+  }, [id]);
+
+  function handleGoBack() {
+    navigation.goBack();
+  }
   return (
     <Container behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ContentScroll>
         <Header>
-          <ButtonBack onPress={() => {}} style={{ marginBottom: 108 }} />
+          <ButtonBack onPress={handleGoBack} style={{ marginBottom: 108 }} />
         </Header>
 
-        <Photo source={{ uri: "https://github.com/diegobamorim.png" }} />
+        <Photo source={{ uri: pizza.photo_url }} />
         <Form>
-          <Title>Nome da pizza</Title>
+          <Title>{pizza.name}</Title>
           <Sizes>
             {PIZZA_TYPES.map((item) => (
               <RadioButton
@@ -48,15 +83,18 @@ export function Order() {
           <FormRow>
             <InputGroup>
               <Label>Número da mesa</Label>
-              <Input keyboardType="numeric" />
+              <Input keyboardType="numeric" onChangeText={setTableNumber} />
             </InputGroup>
             <InputGroup>
               <Label>Quantidade</Label>
-              <Input keyboardType="numeric" />
+              <Input
+                keyboardType="numeric"
+                onChangeText={(value) => setQuantity(Number(value))}
+              />
             </InputGroup>
           </FormRow>
 
-          <Price>Valor de R$ 00,00</Price>
+          <Price>Valor de R$ {amount}</Price>
 
           <Button title="Confirmar pedido" />
         </Form>
