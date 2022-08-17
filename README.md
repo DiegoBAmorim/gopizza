@@ -30,12 +30,12 @@ Complete application to assist Waiters of a Pizzeria. In this App, the Administr
 
 Clone this project: 
 ```bash
-  git clone https://github.com/rodrigorgtic/gopizza.git
+  https://github.com/DiegoBAmorim/gopizza.git
   cd gopizza
   npm install
 ```
 
-Start App with `run-android` or `eun-ios`
+Start App with `run-android` or `run-ios`
 
 ```bash
  npx react-native run-android
